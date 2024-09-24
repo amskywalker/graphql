@@ -1,0 +1,10 @@
+type User {
+ uuid: String!
+ name: String!
+ birthDate: String!
+ motherName: String!
+}
+
+type Query {
+ userById(uuid: String!): User
+}
