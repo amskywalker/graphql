@@ -1,15 +1,18 @@
 package br.com.amskywalker.graphql.application.services;
 
+import br.com.amskywalker.graphql.adapters.out.persistence.JpaUserRepository;
 import br.com.amskywalker.graphql.application.ports.input.UserService;
 import br.com.amskywalker.graphql.application.ports.output.UserRepository;
 import br.com.amskywalker.graphql.domain.model.User;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class UserServiceImpl implements UserService {
-    protected final UserRepository userRepository;
+    protected final JpaUserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository){
+    public UserServiceImpl(JpaUserRepository userRepository){
         this.userRepository = userRepository;
     }
     @Override
