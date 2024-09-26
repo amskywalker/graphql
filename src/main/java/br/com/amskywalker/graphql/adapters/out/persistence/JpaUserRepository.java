@@ -12,25 +12,25 @@ import java.util.UUID;
 
 @Repository
 public class JpaUserRepository implements UserRepository {
-    private final UserJpaRepository userJpaRepository;
+    private final SpringDataUserRepository springDataUserRepository;
 
     @Autowired
-    public JpaUserRepository(UserJpaRepository userJpaRepository) {
-        this.userJpaRepository = userJpaRepository;
+    public JpaUserRepository(SpringDataUserRepository springDataUserRepository) {
+        this.springDataUserRepository = springDataUserRepository;
     }
 
     @Override
     @Transactional
     public User save(User user) {
         UserEntity userEntity = new UserEntity(user.uuid(), user.name(), user.birthDate(), user.motherName());
-        UserEntity userEntitySaved = userJpaRepository.save(userEntity);
+        UserEntity userEntitySaved = springDataUserRepository.save(userEntity);
         return new User(userEntitySaved.getId(), userEntitySaved.getName(), userEntitySaved.getBirthDate(), userEntitySaved.getMotherName());
     }
 
     @Override
     @Transactional(readOnly = true)
     public User findById(UUID id) {
-        Optional<UserEntity> hasUser = userJpaRepository.findById(id);
+        Optional<UserEntity> hasUser = springDataUserRepository.findById(id);
 
         if (hasUser.isEmpty()) {
             throw new UserNotFoundException("User not found");
@@ -43,18 +43,18 @@ public class JpaUserRepository implements UserRepository {
     @Override
     @Transactional
     public User update(User user) {
-        if (!userJpaRepository.existsById(user.uuid())) {
+        if (!springDataUserRepository.existsById(user.uuid())) {
             throw new UserNotFoundException("User not found");
         }
         UserEntity userEntity = new UserEntity(user.uuid(), user.name(), user.birthDate(), user.motherName());
-        UserEntity userEntityUpdated = userJpaRepository.save(userEntity);
+        UserEntity userEntityUpdated = springDataUserRepository.save(userEntity);
         return new User(userEntityUpdated.getId(), userEntityUpdated.getName(), userEntityUpdated.getBirthDate(), userEntityUpdated.getMotherName());
     }
 
     @Override
     @Transactional
     public Boolean delete(User user) {
-        userJpaRepository.deleteById(user.uuid());
-        return !userJpaRepository.existsById(user.uuid());
+        springDataUserRepository.deleteById(user.uuid());
+        return !springDataUserRepository.existsById(user.uuid());
     }
 }
